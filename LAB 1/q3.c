@@ -27,9 +27,7 @@ int main(){
 
 	ca = getc(fin);
 	while(ca != EOF){
-		// printf("Scanned: %s\n",cb);
-		// printf("Row: %d. column: %d\n",line,column);
-		fscanf(fin,"%s",cb);
+		/*fscanf(fin,"%s",cb);
 
 		if(ca == '\n'){
 			line++;
@@ -45,14 +43,22 @@ int main(){
 			printf("\t%d\t%d\n",line,column);
 		}
 		column += strlen(cb);
-		ca = getc(fin);
+		ca = getc(fin);*/
 
-		/*if(ca == '\n'){
+		if(ca == '\n'){
 			line++;
 			column = 0;
 		}
+		else if(ca == '\t')
+			column += 4;
 		else
 			column++;
+
+		if(ca == '"'){
+			do{
+				ca = getc(fin);
+			}while(ca != '"');
+		}	
 
 		if(ca>='a' && ca<='z'){
 			while(ca >= 'a' && ca <= 'z'){
@@ -77,7 +83,7 @@ int main(){
 		}
 
 
-		ca = getc(fin);*/
+		ca = getc(fin);
 
 	}
 
