@@ -28,11 +28,11 @@ void Initialize(){
 void Display(){
 	struct listElement *temp;
 	int i=0;
-	printf("Hash\tName\tType\tSize\tScope\tNo_args\tArgs\tRet_type\n");
+	printf("Hash\tName\tType\tSize\tScope\tNo_args\t\tArgs\t\tRet_type\n");
 	for(i=0;i<TableLength;i++){
 		temp = Table[i];
 		while(temp){
-			printf("\n%d\t%s\t%s\t%d\t%c\t%d\t%s\t%s\n",temp->tok.index,temp->tok.lexeme,temp->tok.type,temp->tok.size,temp->tok.scope,temp->tok.no_arg,temp->tok.args,temp->tok.return_type);
+			printf("\n%d\t%s\t%s\t%d\t%c\t%d\t%s\t\t%s\n",temp->tok.index,temp->tok.lexeme,temp->tok.type,temp->tok.size,temp->tok.scope,temp->tok.no_arg,temp->tok.args,temp->tok.return_type);
 			temp = temp->next;
 		}
 	}
@@ -207,7 +207,7 @@ struct token getNextToken(char ca, FILE *fin, char buf[]){
 		return t;
 	}
 
-	else if(isalpha(ca)){
+	else if(isalpha(ca) || ca == '_'){
 		do{
 			col++;
 			buf[i++] = ca;
@@ -240,42 +240,40 @@ struct token getNextToken(char ca, FILE *fin, char buf[]){
 				//printf("inside func 6\n");
 				strcpy(t.return_type,ty);
 				//printf("%s\n",t.return_type);
-				//printf("inside func 2\n");
-				char b[100][100];
-				for(int j=0;j<100;j++)
-					b[i][0] = '\0';
-				int m=0;
 				ca = fgetc(fin);
+				char arg[100];
+				int p=0;
+				t.args[0] = '\0';
 				while(ca != ')'){
-				//	printf("inside func 3\n");
-					// count++;
-					// if(ca == ' '){
-					// 	m = 0;
-					// }
-					// else if(ca == ','){
-					// 	count++;
-					// 	comma++;
-					// }
-					// else
-					// 	b[comma][m++] = ca;
-
 					count++;
 					if(ca == ',')
 						comma++;
+					else if(ca == ' '){
+						arg[p] = '\0';
+						if(find(arg,types,5) == 0){
+							sprintf(arg,"<id,%d> ",Hash(arg));
+							strcat(t.args,arg);
+						}
+						p = 0;
+						arg[0] = '\0';
+					}
+					else
+						arg[p++] = ca;
 					ca = fgetc(fin);
 				}
-				if(count>0)
+				if(count>0){
+					arg[p] = '\0';
+					if(find(arg,types,5) == 0){
+						sprintf(arg,"<id,%d> ",Hash(arg));
+						strcat(t.args,arg);
+					}
+					arg[0] = '\0';
+					
 					t.no_arg = comma+1;
+					int tf = fseek(fin,-(count+2),SEEK_CUR);
+				}
 				else
 					t.no_arg = 0;
-				for(int j=0;j<t.no_arg;j++){
-					//strcat(t.args,"<id, ");
-					char cat[100];
-					printf("%s\n",b[j]);
-					//itoa(Hash(b[j]),cat,10);
-					//strcat(t.args,cat);
-					//strcat(t.args,">");
-				}
 				t.size = 0;
 				// strcpy(t.args,"<id,");
 				// strcat(t.args,(char)t.index);

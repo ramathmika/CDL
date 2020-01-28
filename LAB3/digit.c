@@ -2,13 +2,14 @@
 
 int global;
 
-void display(int num, int nu){
+void display(int _num, double doub){
+	//num = nu + 5;
 	printf("Nothing here\n");
-	float s;
+	float var;
 }
 
 int main(){
-	int a,b,sum,c[10];
+	int a,b,sum,arr[10];
 	char c;
 	a =    1; /*Multinline
 	comment*/
