@@ -41,7 +41,7 @@ void Display(){
 int Hash(char *str){
 	int i,val=0;
 	for(i=1;i<=strlen(str);i++)
-		val += ((int)str[i]*i);
+		val+= ((int)str[i-1]*i);
 	val = val%TableLength;
 	return val;
 }
@@ -313,9 +313,14 @@ struct token getNextToken(char ca, FILE *fin, char buf[]){
 
 	else if(isdigit(ca)){
 		col++;
-		buf[i++] = ca;
+		do{
+			buf[i++] = ca;
+			ca = fgetc(fin);
+		}while(isdigit(ca) || ca=='x' || ca == '.');
+		
 		buf[i] = '\0';
 		strcpy(t.tok_type,"Numerical Constant.");
+		int tf = fseek(fin,-1,SEEK_CUR);
 		// t.lexeme[0] = '\0';
 		// return t;
 	}
