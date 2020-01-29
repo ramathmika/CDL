@@ -213,7 +213,7 @@ struct token getNextToken(char ca, FILE *fin, char buf[]){
 			col++;
 			buf[i++] = ca;
 			ca = fgetc(fin);
-		}while(isalnum(ca));
+		}while(isalnum(ca) || ca == '_');
 		buf[i] = '\0';
 
 		if(find(buf,keywords,32)){
