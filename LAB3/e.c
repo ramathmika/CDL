@@ -9,7 +9,7 @@
 struct token{
 	char lexeme[100],type[100],scope,args[100],return_type[100],tok_type[100];
 	int index,size,no_arg;
-	//unsigned int row,col;
+	unsigned int row,col;
 	// enum tokenType type;
 };
 
@@ -223,8 +223,8 @@ struct token getNextToken(char ca, FILE *fin, char buf[]){
 				//printf("%s\n",ty);
 			}
 			int tf = fseek(fin,-1,SEEK_CUR);
-			t.lexeme[0] = '\0';
-			return t;
+			// t.lexeme[0] = '\0';
+			// return t;
 		}
 		else{
 			strcpy(t.tok_type,"Identifier.");
@@ -307,6 +307,7 @@ struct token getNextToken(char ca, FILE *fin, char buf[]){
 				t.return_type[0] = '\0';
 			}
 
+			int tf = fseek(fin,-1,SEEK_CUR);
 		}
 		
 	}
@@ -439,8 +440,8 @@ struct token getNextToken(char ca, FILE *fin, char buf[]){
 	}
 
 	strcpy(t.lexeme,buf);
-	//t.row = row;
-	//t.col = col;
+	t.row = row;
+	t.col = col;
 	t.index = Hash(t.lexeme);
 	//ind++;
 	return t;
@@ -485,7 +486,7 @@ int main(){
 
 		if(t.lexeme[0] != '\0'){
 			//printf("%d",k++);
-			printf("\n%d <%s, %s>\n",t.index,t.lexeme,t.tok_type);
+			printf("\n%d <%s, %d, %d, %s>\n",t.index,t.lexeme,t.row,t.col,t.tok_type);
 			//printf("\n%d",k++);
 			if(strcmp(t.tok_type,"Identifier.") == 0)
 				Insert(t);
