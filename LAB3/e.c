@@ -7,7 +7,7 @@
 // enum tokenType{EOFILE=-1,LESS_THAN,LESS_THAN_OR_EQUAL,GREATER_THAN,GREATER_THAN_OR_EQUAL,EQUAL,NOT_EQUAL};
 
 struct token{
-	char lexeme[100],type[100],scope,args[100],return_type[100];
+	char lexeme[100],type[100],scope,args[100],return_type[100],tok_type[100];
 	int index,size,no_arg;
 	//unsigned int row,col;
 	// enum tokenType type;
@@ -28,7 +28,7 @@ void Initialize(){
 void Display(){
 	struct listElement *temp;
 	int i=0;
-	printf("Hash\tName\tType\tSize\tScope\tNo_args\t\tArgs\t\tRet_type\n");
+	printf("Hash\tName\tType\tSize\tScope\tNo_args\tArgs\t\tRet_type\n");
 	for(i=0;i<TableLength;i++){
 		temp = Table[i];
 		while(temp){
@@ -83,7 +83,7 @@ void Insert(struct token tok){
 
 char keywords[32][100] = {"int","char","float","double","if","while","do","for","else","auto","const","short","struct","unsigned","break","continue","long","signed","switch","void","case","default","enum","goto","register","sizeof","typedef","volatile","extern","return","static","union"};
 char types[5][100] = {"int","char","float","double","void"};
-char prefun[5][100] = {"printf","scanf","strlen","strcmp","strcat"};
+char prefun[5][100] = {"printf","scanf","strlen","strcmp","sqrt"};
 
 int size(char str[]){
 	if(!strcmp(str,"int"))
@@ -186,8 +186,9 @@ struct token getNextToken(char ca, FILE *fin, char buf[]){
 		}while(ca != '"');
 		buf[i++] = '"';
 		buf[i] = '\0';
-		t.lexeme[0] = '\0';
-		return t;
+		strcpy(t.tok_type,"String Literal");
+		// t.lexeme[0] = '\0';
+		// return t;
 	}
 
 	else if(ca == '#'){
@@ -212,11 +213,11 @@ struct token getNextToken(char ca, FILE *fin, char buf[]){
 			col++;
 			buf[i++] = ca;
 			ca = fgetc(fin);
-		}while(isalpha(ca));
+		}while(isalnum(ca));
 		buf[i] = '\0';
 
 		if(find(buf,keywords,32)){
-			//strcpy(t.type,"Keyword");
+			strcpy(t.tok_type,"Keyword");
 			if(find(buf,types,5)){
 				strcpy(ty,buf);
 				//printf("%s\n",ty);
@@ -226,7 +227,7 @@ struct token getNextToken(char ca, FILE *fin, char buf[]){
 			return t;
 		}
 		else{
-			//strcpy(t.type,"Identifier.");
+			strcpy(t.tok_type,"Identifier.");
 			if(find(buf,prefun,5)){
 				t.lexeme[0] = '\0';
 				return t;
@@ -314,9 +315,9 @@ struct token getNextToken(char ca, FILE *fin, char buf[]){
 		col++;
 		buf[i++] = ca;
 		buf[i] = '\0';
-		//strcpy(t.type,"Numerical Constant.");
-		t.lexeme[0] = '\0';
-		return t;
+		strcpy(t.tok_type,"Numerical Constant.");
+		// t.lexeme[0] = '\0';
+		// return t;
 	}
 
 	else if(ca == '='){
@@ -329,15 +330,15 @@ struct token getNextToken(char ca, FILE *fin, char buf[]){
 			col++;
 			buf[i++] = ca;
 			buf[i] = '\0';
-			//strcpy(t.type,"Relational Operator.");
-			t.lexeme[0] = '\0';
-			return t;
+			strcpy(t.tok_type,"Relational Operator.");
+			// t.lexeme[0] = '\0';
+			// return t;
 		}
 		else{
 			buf[i] = '\0';
-			//strcpy(t.type,"Assignment Operator.");
-			t.lexeme[0] = '\0';
-			return t;
+			strcpy(t.tok_type,"Assignment Operator.");
+			// t.lexeme[0] = '\0';
+			// return t;
 		}
 		int tf = fseek(fin,f,SEEK_CUR);
 	}
@@ -352,10 +353,10 @@ struct token getNextToken(char ca, FILE *fin, char buf[]){
 			buf[i++] = ca;
 		}
 		buf[i] = '\0';
-		//strcpy(t.type,"Relational Operator.");
+		strcpy(t.tok_type,"Relational Operator.");
 		int tf = fseek(fin,f,SEEK_CUR);
-		t.lexeme[0] = '\0';
-		return t;
+		// t.lexeme[0] = '\0';
+		// return t;
 	}
 	
 	else if(ca == '&'){
@@ -368,12 +369,12 @@ struct token getNextToken(char ca, FILE *fin, char buf[]){
 			col++;
 			buf[i++] = ca;
 			buf[i] = '\0';
-			//strcpy(t.type,"Logical Operator.");
+			strcpy(t.tok_type,"Logical Operator.");
 			
 		}
 		int tf = fseek(fin,f,SEEK_CUR);
-		t.lexeme[0] = '\0';
-		return t;
+		// t.lexeme[0] = '\0';
+		// return t;
 	}
 
 	else if(ca == '|'){
@@ -386,11 +387,11 @@ struct token getNextToken(char ca, FILE *fin, char buf[]){
 			col++;
 			buf[i++] = ca;
 			buf[i] = '\0';
-			//strcpy(t.type,"Logical Operator.");
+			strcpy(t.tok_type,"Logical Operator.");
 		}
 		int tf = fseek(fin,f,SEEK_CUR);
-		t.lexeme[0] = '\0';
-		return t;
+		// t.lexeme[0] = '\0';
+		// return t;
 	}
 
 	else if(ca == '!'){
@@ -403,22 +404,22 @@ struct token getNextToken(char ca, FILE *fin, char buf[]){
 			col++;
 			buf[i++] = ca;
 			buf[i] = '\0';
-			//strcpy(t.type,"Relational Operator.");
+			strcpy(t.tok_type,"Relational Operator.");
 		}
 		buf[i] = '\0';
-		//strcpy(t.type,"Logical Operator.");
+		strcpy(t.tok_type,"Logical Operator.");
 		int tf = fseek(fin,f,SEEK_CUR);
-		t.lexeme[0] = '\0';
-		return t;
+		// t.lexeme[0] = '\0';
+		// return t;
 	}
 
 	else if(ca == '+' || ca == '-' || ca == '*' || ca == '/' || ca == '%'){
 		col++;
 		buf[i++] = ca;
 		buf[i] = '\0';
-		//strcpy(t.type,"Arithmetic Operator.");
-		t.lexeme[0] = '\0';
-		return t;
+		strcpy(t.tok_type,"Arithmetic Operator.");
+		// t.lexeme[0] = '\0';
+		// return t;
 	}  // Make exception for pointers
 
 	else{
@@ -427,9 +428,9 @@ struct token getNextToken(char ca, FILE *fin, char buf[]){
 		buf[i] = '\0';
 		if(ca=='}')
 			flag = 0;
-		//strcpy(t.type,buf);
-		t.lexeme[0] = '\0';
-		return t;
+		strcpy(t.tok_type,buf);
+		// t.lexeme[0] = '\0';
+		// return t;
 	}
 
 	strcpy(t.lexeme,buf);
@@ -446,7 +447,7 @@ int main(){
 
 	int k=0;
 
-	FILE *fin = fopen("digit.c","r");
+	FILE *fin = fopen("sample.c","r");
 	if(!fin){
 		printf("Cannot open file.\n");
 		exit(0);
@@ -479,10 +480,11 @@ int main(){
 
 		if(t.lexeme[0] != '\0'){
 			//printf("%d",k++);
-			//printf("\n%d\t%s\t%s\t%d\t%c\t%d\t%s\t%s\n",t.index,t.lexeme,t.type,t.size,t.scope,t.no_arg,t.args,t.return_type);
+			printf("\n%d <%s, %s>\n",t.index,t.lexeme,t.tok_type);
 			//printf("\n%d",k++);
-			Insert(t);
-			ind++;
+			if(strcmp(t.tok_type,"Identifier.") == 0)
+				Insert(t);
+			//ind++;
 			// printf("%d",k++);
 		}
 
@@ -495,6 +497,7 @@ int main(){
 
 	}
 
+	printf("\n\n");
 	Display();
 	return 0;
 }
