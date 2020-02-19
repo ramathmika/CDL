@@ -174,6 +174,7 @@ void Dprime(FILE *fin, char ca){
 		if(!strcmp(lookahead.lexeme,"{")){
 			lookahead = getNextToken(fin,ca);
 			Statement_List(fin,ca);
+			lookahead = getNextToken(fin,ca);
 			if(!strcmp(lookahead.lexeme,"}")){
 				lookahead = getNextToken(fin,ca);
 			}
