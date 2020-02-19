@@ -144,7 +144,9 @@ struct token getNextToken(FILE *fin,char ca){
 					col++;
 			}while(ca != '/');
 		}
-		t.lexeme[0] = '\0';
+		//t.lexeme[0] = '\0';
+		//return t;
+		t = getNextToken(fin,ca);
 		return t;
 	}
 
@@ -170,7 +172,9 @@ struct token getNextToken(FILE *fin,char ca){
 			ca = fgetc(fin);
 		}
 		int tf = fseek(fin,-1,SEEK_CUR);
-		t.lexeme[0] = '\0';
+		//t.lexeme[0] = '\0';
+		//return t;
+		t = getNextToken(fin,ca);
 		return t;
 	}
 
@@ -206,7 +210,9 @@ struct token getNextToken(FILE *fin,char ca){
 			row++;
 			col = 1;
 		}
-		t.lexeme[0] = '\0';
+		//t.lexeme[0] = '\0';
+		//return t;
+		t = getNextToken(fin,ca);
 		return t;
 	}
 
@@ -228,17 +234,19 @@ struct token getNextToken(FILE *fin,char ca){
 			// return t;
 		}
 		else{
-			strcpy(t.tok_type,"Identifier.");
+			strcpy(t.tok_type,"Identifier");
 			if(find(buf,prefun,5)){
 				t.lexeme[0] = '\0';
 				return t;
 			}
 			else if(ca=='('){
+				int f = 1;
 				strcpy(t.type,"FUNC");
 				flag = 1;
 				t.scope = 'G';
 				strcpy(t.return_type,ty);
 				ca = fgetc(fin);
+				f++;
 				char arg[100];
 				int p=0;
 				t.args[0] = '\0';
@@ -258,6 +266,7 @@ struct token getNextToken(FILE *fin,char ca){
 					else
 						arg[p++] = ca;
 					ca = fgetc(fin);
+					f++;
 				}
 				if(count>0){
 					arg[p] = '\0';
@@ -273,19 +282,23 @@ struct token getNextToken(FILE *fin,char ca){
 				else
 					t.no_arg = 0;
 				t.size = 0;
+				int tf = fseek(fin,-(f-1),SEEK_CUR);
 			}
 			else{
-				int c = 0;
+				int c = 0,d=0;
 				strcpy(t.type,ty);
 				if(ca == '['){
 					ca = fgetc(fin);
+					d++;
 					while(ca != ']'){
 						char ch[1];
 						ch[0] = ca;
 						ch[1] = '\0';
 						c = c*10 + atoi(ch);
 						ca = fgetc(fin);
+						d++;
 					}
+					fseek(fin,-d,SEEK_CUR);
 				}
 				if(!c)
 					c = 1;
@@ -328,13 +341,13 @@ struct token getNextToken(FILE *fin,char ca){
 			col++;
 			buf[i++] = ca;
 			buf[i] = '\0';
-			strcpy(t.tok_type,"Relational Operator.");
+			strcpy(t.tok_type,"Relational Operator");
 			// t.lexeme[0] = '\0';
 			// return t;
 		}
 		else{
 			buf[i] = '\0';
-			strcpy(t.tok_type,"Assignment Operator.");
+			strcpy(t.tok_type,"Assignment Operator");
 			// t.lexeme[0] = '\0';
 			// return t;
 		}
@@ -351,7 +364,7 @@ struct token getNextToken(FILE *fin,char ca){
 			buf[i++] = ca;
 		}
 		buf[i] = '\0';
-		strcpy(t.tok_type,"Relational Operator.");
+		strcpy(t.tok_type,"Relational Operator");
 		int tf = fseek(fin,f,SEEK_CUR);
 		// t.lexeme[0] = '\0';
 		// return t;
@@ -367,7 +380,7 @@ struct token getNextToken(FILE *fin,char ca){
 			col++;
 			buf[i++] = ca;
 			buf[i] = '\0';
-			strcpy(t.tok_type,"Logical Operator.");
+			strcpy(t.tok_type,"Logical Operator");
 			
 		}
 		int tf = fseek(fin,f,SEEK_CUR);
@@ -385,7 +398,7 @@ struct token getNextToken(FILE *fin,char ca){
 			col++;
 			buf[i++] = ca;
 			buf[i] = '\0';
-			strcpy(t.tok_type,"Logical Operator.");
+			strcpy(t.tok_type,"Logical Operator");
 		}
 		int tf = fseek(fin,f,SEEK_CUR);
 		// t.lexeme[0] = '\0';
@@ -402,23 +415,30 @@ struct token getNextToken(FILE *fin,char ca){
 			col++;
 			buf[i++] = ca;
 			buf[i] = '\0';
-			strcpy(t.tok_type,"Relational Operator.");
+			strcpy(t.tok_type,"Relational Operator");
 		}
 		buf[i] = '\0';
-		strcpy(t.tok_type,"Logical Operator.");
+		strcpy(t.tok_type,"Logical Operator");
 		int tf = fseek(fin,f,SEEK_CUR);
 		// t.lexeme[0] = '\0';
 		// return t;
 	}
 
-	else if(ca == '+' || ca == '-' || ca == '*' || ca == '/' || ca == '%'){
+	else if(ca == '+' || ca == '-'){
 		col++;
 		buf[i++] = ca;
 		buf[i] = '\0';
-		strcpy(t.tok_type,"Arithmetic Operator.");
+		strcpy(t.tok_type,"Addition Operator");
 		// t.lexeme[0] = '\0';
 		// return t;
 	}  // Make exception for pointers
+
+	else if(ca == '*' || ca == '/' || ca == '%'){
+		col++;
+		buf[i++] = ca;
+		buf[i] = '\0';
+		strcpy(t.tok_type,"Multiplication Operator");
+	}
 
 	else{
 		col++;

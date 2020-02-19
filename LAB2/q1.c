@@ -32,7 +32,7 @@ struct token getNextToken(char ca, FILE *fin, char buf[]){
 				ca = fgetc(fin);
 			}
 			row++;
-			col = 0;
+			col = 1;
 		}
 		else if(cb == '*'){
 			do{
@@ -40,7 +40,7 @@ struct token getNextToken(char ca, FILE *fin, char buf[]){
 					ca = fgetc(fin);
 					if(ca == '\n'){
 						row++;
-						col = 0;
+						col = 1;
 					}
 					else
 						col++;
@@ -48,7 +48,7 @@ struct token getNextToken(char ca, FILE *fin, char buf[]){
 				ca = fgetc(fin);
 				if(ca == '\n'){
 					row++;
-					col = 0;
+					col = 1;
 				}
 				else
 					col++;
@@ -61,7 +61,7 @@ struct token getNextToken(char ca, FILE *fin, char buf[]){
 	else if(ca == '\t' || ca == ' ' || ca == '\n'){
 		if(ca == '\n'){
 			row++;
-			col = 0;
+			col = 1;
 		}
 		else if(ca == '\t')
 			col+=4;
@@ -71,7 +71,7 @@ struct token getNextToken(char ca, FILE *fin, char buf[]){
 		while(ca == ' ' || ca == '\t' || ca == '\n'){
 			if(ca == '\n'){
 				row++;
-				col = 0;
+				col = 1;
 			}
 			else if(ca == '\t')
 				col+=4;
@@ -91,7 +91,7 @@ struct token getNextToken(char ca, FILE *fin, char buf[]){
 			ca = fgetc(fin);
 			if(ca == '\n'){
 				row++;
-				col = 0;
+				col = 1;
 			}
 			else
 				col++;
@@ -112,13 +112,13 @@ struct token getNextToken(char ca, FILE *fin, char buf[]){
 			while(ca != '\n')
 				ca = fgetc(fin);
 			row++;
-			col = 0;
+			col = 1;
 		}
 		t.lexemename[0] = '\0';
 		return t;
 	}
 
-	else if(isalpha(ca)){
+	else if(isalpha(ca) || ca == '_'){
 		do{
 			col++;
 			buf[i++] = ca;
@@ -258,206 +258,7 @@ int main(){
 
 	ca = fgetc(fin);
 	while(ca!=EOF){
-		// i=0; 
 		buf[0] = '\0';
-
-		// if(ca == '/'){
-		// 	cb = fgetc(fin);
-		// 	col++;
-		// 	if(cb == '/'){
-		// 		while(ca != '\n'){
-		// 			ca = fgetc(fin);
-		// 		}
-		// 		row++;
-		// 		col = 0;
-		// 	}
-		// 	else if(cb == '*'){
-		// 		do{
-		// 			while(ca != '*'){
-		// 				ca = fgetc(fin);
-		// 				if(ca == '\n'){
-		// 					row++;
-		// 					col = 0;
-		// 				}
-		// 				else
-		// 					col++;
-		// 			}
-		// 			ca = fgetc(fin);
-		// 			if(ca == '\n'){
-		// 				row++;
-		// 				col = 0;
-		// 			}
-		// 			else
-		// 				col++;
-		// 		}while(ca != '/');
-		// 	}
-		// }
-
-		// else if(ca == '\t' || ca == ' ' || ca == '\n'){
-		// 	if(ca == '\n'){
-		// 		row++;
-		// 		col = 0;
-		// 	}
-		// 	else if(ca == '\t')
-		// 		col+=4;
-		// 	else
-		// 		col++;
-		// 	ca = fgetc(fin);
-		// 	while(ca == ' ' || ca == '\t' || ca == '\n'){
-		// 		if(ca == '\n'){
-		// 			row++;
-		// 			col = 0;
-		// 		}
-		// 		else if(ca == '\t')
-		// 			col+=4;
-		// 		else
-		// 			col++;
-		// 		ca = fgetc(fin);
-		// 	}
-		// 	continue;
-		// }
-
-		// else if(ca == '"'){
-		// 	col++;
-		// 	do{
-		// 		buf[i++] = ca;
-		// 		ca = fgetc(fin);
-		// 		if(ca == '\n'){
-		// 			row++;
-		// 			col = 0;
-		// 		}
-		// 		else
-		// 			col++;
-		// 	}while(ca != '"');
-		// 	buf[i++] = '"';
-		// 	buf[i] = '\0';
-		// 	printf("\n<%d, %d, %s, String Literal>\n",row,col,buf);
-		// }
-
-		// else if(ca == '#'){
-		// 	col++;
-		// 	ca = fgetc(fin);
-		// 	while(ca == ' '){
-		// 		col++;
-		// 		ca = fgetc(fin);
-		// 	}
-		// 	if(ca == 'i'){
-		// 		while(ca != '\n')
-		// 			ca = fgetc(fin);
-		// 		row++;
-		// 		col = 0;
-		// 	}
-		// }
-
-		// else if(isalpha(ca)){
-		// 	do{
-		// 		col++;
-		// 		buf[i++] = ca;
-		// 		ca = fgetc(fin);
-		// 	}while(isalpha(ca));
-		// 	buf[i] = '\0';
-
-		// 	if(find(buf)){
-		// 		printf("\n<%d, %d, %s, Keyword>\n",row,(col-strlen(buf)+1),buf);
-		// 	}
-		// 	else{
-		// 		printf("\n<%d, %d, %s, Identifier>\n",row,(col-strlen(buf)+1),buf);
-		// 	}
-		// 	continue;
-		// }
-
-		// else if(isdigit(ca)){
-		// 	col++;
-		// 	printf("\n<%d, %d, %c, Numerical Constant>\n",row,col,ca);
-		// }
-
-		// else if(ca == '='){
-		// 	col++;
-		// 	buf[i++] = ca;
-		// 	ca = fgetc(fin);
-		// 	if(ca == '='){
-		// 		col++;
-		// 		buf[i++] = ca;
-		// 		buf[i] = '\0';
-		// 		printf("\n<%d, %d, %s, Relational Operator>\n",row,col-1,buf);
-		// 	}
-		// 	else{
-		// 		buf[i] = '\0';
-		// 		printf("\n<%d, %d, %s, Assignment Operator>\n",row,col,buf);
-		// 	}
-		// 	continue;
-		// }
-		// else if(ca == '<' || ca == '>'){
-		// 	col++;
-		// 	buf[i++] = ca;
-		// 	ca = fgetc(fin);
-		// 	if(ca == '='){
-		// 		col++;
-		// 		buf[i++] = ca;
-		// 	}
-		// 	else if(ca == '\n'){
-		// 		row++;
-		// 		col = 0;
-		// 	}
-		// 	buf[i] = '\0';
-		// 	printf("\n<%d, %d, %s, Relational Operator>\n",row,col,buf);
-		// 	continue;
-		// }
-		
-		// else if(ca == '&'){
-		// 	col++;
-		// 	buf[i++] = ca;
-		// 	ca = fgetc(fin);
-		// 	if(ca == '&'){
-		// 		col++;
-		// 		buf[i++] = ca;
-		// 		buf[i] = '\0';
-		// 		printf("\n<%d, %d, %s, Logical Operator>\n",row,col-1,buf);
-		// 	}
-		// 	continue;
-		// }
-
-		// else if(ca == '|'){
-		// 	col++;
-		// 	buf[i++] = ca;
-		// 	ca = fgetc(fin);
-		// 	if(ca == '|'){
-		// 		col++;
-		// 		buf[i++] = ca;
-		// 		buf[i] = '\0';
-		// 		printf("\n<%d, %d, %s, Logical Operator>\n",row,col-1,buf);
-		// 	}
-		// 	continue;
-		// }
-
-		// else if(ca == '!'){
-		// 	col++;
-		// 	buf[i++] = ca;
-		// 	ca = fgetc(fin);
-		// 	if(ca == '='){
-		// 		col++;
-		// 		buf[i++] = ca;
-		// 		buf[i] = '\0';
-		// 		printf("\n<%d, %d, %s, Relational Operator>\n",row,col-1,buf);
-		// 	}
-		// 	buf[i] = '\0';
-		// 	printf("\n<%d, %d, %s, Logical Operator>\n",row,col,buf);
-		// 	continue;
-		// }
-
-		// else if(ca == '+' || ca == '-' || ca == '*' || ca == '/' || ca == '%'){
-		// 	col++;
-		// 	buf[i++] = ca;
-		// 	buf[i] = '\0';
-		// 	printf("\n<%d, %d, %s, Arithmetic Operator>\n",row,col,buf);
-		// }  // Make exception for pointers
-
-		// else{
-		// 	col++;
-		// 	buf[i++] = ca;
-		// 	buf[i] = '\0';
-		// 	printf("\n<%d, %d, %s, %s>\n",row,col,buf,buf);
-		// }
 
 		t = getNextToken(ca,fin,buf);
 		if(t.lexemename[0] != '\0')
@@ -466,3 +267,207 @@ int main(){
 		ca = fgetc(fin);
 	}
 }
+
+
+
+//In main() exec
+/*		i=0; 
+		buf[0] = '\0';
+
+		if(ca == '/'){
+			cb = fgetc(fin);
+			col++;
+			if(cb == '/'){
+				while(ca != '\n'){
+					ca = fgetc(fin);
+				}
+				row++;
+				col = 0;
+			}
+			else if(cb == '*'){
+				do{
+					while(ca != '*'){
+						ca = fgetc(fin);
+						if(ca == '\n'){
+							row++;
+							col = 0;
+						}
+						else
+							col++;
+					}
+					ca = fgetc(fin);
+					if(ca == '\n'){
+						row++;
+						col = 0;
+					}
+					else
+						col++;
+				}while(ca != '/');
+			}
+		}
+
+		else if(ca == '\t' || ca == ' ' || ca == '\n'){
+			if(ca == '\n'){
+				row++;
+				col = 0;
+			}
+			else if(ca == '\t')
+				col+=4;
+			else
+				col++;
+			ca = fgetc(fin);
+			while(ca == ' ' || ca == '\t' || ca == '\n'){
+				if(ca == '\n'){
+					row++;
+					col = 0;
+				}
+				else if(ca == '\t')
+					col+=4;
+				else
+					col++;
+				ca = fgetc(fin);
+			}
+			continue;
+		}
+
+		else if(ca == '"'){
+			col++;
+			do{
+				buf[i++] = ca;
+				ca = fgetc(fin);
+				if(ca == '\n'){
+					row++;
+					col = 0;
+				}
+				else
+					col++;
+			}while(ca != '"');
+			buf[i++] = '"';
+			buf[i] = '\0';
+			printf("\n<%d, %d, %s, String Literal>\n",row,col,buf);
+		}
+
+		else if(ca == '#'){
+			col++;
+			ca = fgetc(fin);
+			while(ca == ' '){
+				col++;
+				ca = fgetc(fin);
+			}
+			if(ca == 'i'){
+				while(ca != '\n')
+					ca = fgetc(fin);
+				row++;
+				col = 0;
+			}
+		}
+
+		else if(isalpha(ca)){
+			do{
+				col++;
+				buf[i++] = ca;
+				ca = fgetc(fin);
+			}while(isalpha(ca));
+			buf[i] = '\0';
+
+			if(find(buf)){
+				printf("\n<%d, %d, %s, Keyword>\n",row,(col-strlen(buf)+1),buf);
+			}
+			else{
+				printf("\n<%d, %d, %s, Identifier>\n",row,(col-strlen(buf)+1),buf);
+			}
+			continue;
+		}
+
+		else if(isdigit(ca)){
+			col++;
+			printf("\n<%d, %d, %c, Numerical Constant>\n",row,col,ca);
+		}
+
+		else if(ca == '='){
+			col++;
+			buf[i++] = ca;
+			ca = fgetc(fin);
+			if(ca == '='){
+				col++;
+				buf[i++] = ca;
+				buf[i] = '\0';
+				printf("\n<%d, %d, %s, Relational Operator>\n",row,col-1,buf);
+			}
+			else{
+				buf[i] = '\0';
+				printf("\n<%d, %d, %s, Assignment Operator>\n",row,col,buf);
+			}
+			continue;
+		}
+		else if(ca == '<' || ca == '>'){
+			col++;
+			buf[i++] = ca;
+			ca = fgetc(fin);
+			if(ca == '='){
+				col++;
+				buf[i++] = ca;
+			}
+			else if(ca == '\n'){
+				row++;
+				col = 0;
+			}
+			buf[i] = '\0';
+			printf("\n<%d, %d, %s, Relational Operator>\n",row,col,buf);
+			continue;
+		}
+		
+		else if(ca == '&'){
+			col++;
+			buf[i++] = ca;
+			ca = fgetc(fin);
+			if(ca == '&'){
+				col++;
+				buf[i++] = ca;
+				buf[i] = '\0';
+				printf("\n<%d, %d, %s, Logical Operator>\n",row,col-1,buf);
+			}
+			continue;
+		}
+
+		else if(ca == '|'){
+			col++;
+			buf[i++] = ca;
+			ca = fgetc(fin);
+			if(ca == '|'){
+				col++;
+				buf[i++] = ca;
+				buf[i] = '\0';
+				printf("\n<%d, %d, %s, Logical Operator>\n",row,col-1,buf);
+			}
+			continue;
+		}
+
+		else if(ca == '!'){
+			col++;
+			buf[i++] = ca;
+			ca = fgetc(fin);
+			if(ca == '='){
+				col++;
+				buf[i++] = ca;
+				buf[i] = '\0';
+				printf("\n<%d, %d, %s, Relational Operator>\n",row,col-1,buf);
+			}
+			buf[i] = '\0';
+			printf("\n<%d, %d, %s, Logical Operator>\n",row,col,buf);
+			continue;
+		}
+
+		else if(ca == '+' || ca == '-' || ca == '*' || ca == '/' || ca == '%'){
+			col++;
+			buf[i++] = ca;
+			buf[i] = '\0';
+			printf("\n<%d, %d, %s, Arithmetic Operator>\n",row,col,buf);
+		}  // Make exception for pointers
+
+		else{
+			col++;
+			buf[i++] = ca;
+			buf[i] = '\0';
+			printf("\n<%d, %d, %s, %s>\n",row,col,buf,buf);
+		}*/

@@ -3,8 +3,15 @@
 
 struct token lookahead;
 
+char firstProgram[][100] = {}
+
 void Program(FILE *fin,char ca){
-	
+	lookahead = getNextToken(fin,ca);
+
+	if(!strcmp(lookahead.lexeme,"main")){
+		lookahead = getNextToken(fin,ca);
+		if(!strcmp(lookahead.lexeme,"("))
+	}
 }
 
 void parser(fin){
