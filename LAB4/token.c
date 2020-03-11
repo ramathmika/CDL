@@ -290,7 +290,7 @@ struct token getNextToken(FILE *fin,char ca){
 				if(ca == '['){
 					ca = fgetc(fin);
 					d++;
-					while(ca != ']'){
+					while(ca != ']' && ca!='$'){
 						char ch[1];
 						ch[0] = ca;
 						ch[1] = '\0';
